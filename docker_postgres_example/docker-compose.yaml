@@ -1,0 +1,30 @@
+version: "3.4"
+
+services:
+  postgres:
+    build: ./postgres/
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "docker"
+      POSTGRES_DB: "graph"
+    restart: on-failure
+    networks:
+      - db-data
+
+  app:
+    build: .
+    depends_on: 
+      - postgres
+    container_name: my-app
+    environment:
+      DB_HOST: "postgres"
+      DB_USER: "postgres"
+      DB_PASSWORD: "docker"
+      DB_NAME: "graph"
+    networks:
+      - db-data
+
+networks:
+  db-data:
